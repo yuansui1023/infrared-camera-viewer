@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Builds
+build/
+dist/
+
+# Vendor SDK files and packages
+vendor/
+sdk/
+Allied Vision/
+*.dll
+*.exe
+*.sys
+*.cti
+*.lib
+*.whl
+*.nupkg
+*.vsix
+
+# Camera data and machine-specific configuration
+captures/
+snapshots/
+local-settings/
+*.tif
+*.tiff
+*.raw
+*.pgm
+*.log
+
+# Credentials
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
