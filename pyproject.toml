@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "infrared-camera-viewer"
+version = "0.1.0"
+description = "A monochrome camera viewer with interactive contrast controls and TIFF snapshots."
+readme = "README.md"
+requires-python = ">=3.10,<3.15"
+dependencies = [
+    "numpy>=1.26,<3",
+    "PySide6>=6.7,<7",
+    "pyqtgraph>=0.13.7,<0.15",
+    "tifffile>=2024.8.30",
+]
+
+[project.optional-dependencies]
+camera = ["vmbpy==1.2.3; sys_platform == 'win32'"]
+build = ["pyinstaller>=6.11,<7"]
+
+[project.gui-scripts]
+infrared-camera-viewer = "ir_camera_viewer.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

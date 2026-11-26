@@ -1,0 +1,46 @@
+name: Windows viewer
+
+on:
+  push:
+    branches: [main, feat/windows-viewer]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    env:
+      QT_QPA_PLATFORM: offscreen
+      PYQTGRAPH_QT_LIB: PySide6
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install application, pinned camera API, and builder
+        run: python -m pip install ".[camera,build]"
+      - name: Test numerical processing, VmbPy contract, TIFF, and offscreen UI
+        run: python -m unittest discover -s tests -v
+      - name: Import the real Windows camera API
+        run: python -c "from vmbpy import VmbSystem; print(VmbSystem.get_instance().get_version())"
+      - name: Build Windows x64 bundle
+        shell: pwsh
+        run: ./Build-Windows.ps1
+      - name: Smoke-test the frozen synthetic demo
+        shell: pwsh
+        run: |
+          $settings = Join-Path $env:RUNNER_TEMP 'frozen-viewer-settings.json'
+          $process = Start-Process -FilePath 'dist/InfraredCameraViewer/InfraredCameraViewer.exe' -ArgumentList @('--demo', '--settings', $settings, '--quit-after', '3') -PassThru
+          if (-not $process.WaitForExit(30000)) { $process.Kill(); throw 'Frozen viewer did not exit.' }
+          if ($process.ExitCode -ne 0) { throw "Frozen viewer exited with $($process.ExitCode)." }
+          if (-not (Test-Path $settings)) { throw 'Frozen viewer did not save preferences.' }
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: InfraredCameraViewer-Windows-x64
+          path: dist/InfraredCameraViewer-Windows-x64.zip
+          if-no-files-found: error

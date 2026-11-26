@@ -6,7 +6,7 @@ Use English for all repository content: filenames, documentation, code comments,
 
 ## Current scope
 
-This repository currently contains planning documents only. Creating this repository is not authorization to implement the application. Begin application implementation only after the user explicitly requests it.
+Application implementation has been explicitly authorized. Implement the English-only Windows viewer described in the development specification.
 
 Use docs/development-prompt.md as the implementation specification and docs/sdk-assessment.md as the record of inspected SDK facts. A new user instruction takes precedence over these documents.
 
